@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import {
   Table,
   TableBody,
@@ -66,22 +67,27 @@ export function ClientsContent() {
     },
   ]
 
+  const getInitials = (name: string) => {
+    const words = name.split(' ')
+    return words.slice(0, 2).map(w => w[0]).join('')
+  }
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">العملاء</h1>
-          <p className="text-muted-foreground mt-2">إدارة قاعدة بيانات العملاء</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">العملاء</h1>
+          <p className="text-muted-foreground text-base">إدارة قاعدة بيانات العملاء</p>
         </div>
-        <Button className="bg-accent hover:bg-accent/90 text-accent-foreground">
+        <Button className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-sm">
           <Plus className="ml-2 h-4 w-4" />
           إضافة عميل جديد
         </Button>
       </div>
 
       {/* Search */}
-      <Card className="border-border">
+      <Card className="border-border shadow-sm">
         <CardContent className="p-6">
           <div className="relative">
             <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -89,57 +95,57 @@ export function ClientsContent() {
               placeholder="ابحث عن عميل..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pr-10"
+              className="pr-10 h-11"
             />
           </div>
         </CardContent>
       </Card>
 
       {/* Clients Table */}
-      <Card className="border-border">
+      <Card className="border-border shadow-sm">
         <CardContent className="p-0">
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
-                <TableRow>
-                  <TableHead className="text-right">اسم العميل</TableHead>
-                  <TableHead className="text-right">النوع</TableHead>
-                  <TableHead className="text-right">رقم الهوية / السجل التجاري</TableHead>
-                  <TableHead className="text-right">تاريخ الانتهاء</TableHead>
-                  <TableHead className="text-right">عدد القضايا</TableHead>
-                  <TableHead className="text-right">التواصل</TableHead>
-                  <TableHead className="text-right">الإجراءات</TableHead>
+                <TableRow className="hover:bg-transparent border-border">
+                  <TableHead className="text-right font-semibold h-14 px-6">اسم العميل</TableHead>
+                  <TableHead className="text-right font-semibold h-14">النوع</TableHead>
+                  <TableHead className="text-right font-semibold h-14">رقم الهوية / السجل التجاري</TableHead>
+                  <TableHead className="text-right font-semibold h-14">تاريخ الانتهاء</TableHead>
+                  <TableHead className="text-right font-semibold h-14">عدد القضايا</TableHead>
+                  <TableHead className="text-right font-semibold h-14">التواصل</TableHead>
+                  <TableHead className="text-right font-semibold h-14 px-6">الإجراءات</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {clients.map((client, index) => (
-                  <TableRow key={index}>
-                    <TableCell className="font-medium">
-                      <div className="flex items-center gap-2">
-                        {client.type === 'شركة' ? (
-                          <Building2 className="h-4 w-4 text-muted-foreground" />
-                        ) : (
-                          <User className="h-4 w-4 text-muted-foreground" />
-                        )}
-                        {client.name}
+                  <TableRow key={index} className={`${index % 2 === 0 ? 'bg-muted/30' : ''} hover:bg-muted/50 transition-colors border-border cursor-pointer`}>
+                    <TableCell className="font-semibold px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        <Avatar className="h-9 w-9 flex-shrink-0">
+                          <AvatarFallback className={client.type === 'شركة' ? 'bg-blue-100 text-blue-700 dark:bg-blue-950/30 dark:text-blue-400' : 'bg-green-100 text-green-700 dark:bg-green-950/30 dark:text-green-400'}>
+                            {client.type === 'شركة' ? <Building2 className="h-4 w-4" /> : <User className="h-4 w-4" />}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span>{client.name}</span>
                       </div>
                     </TableCell>
-                    <TableCell>
-                      <Badge variant={client.type === 'شركة' ? 'default' : 'secondary'}>
+                    <TableCell className="py-4">
+                      <Badge variant={client.type === 'شركة' ? 'default' : 'secondary'} className="px-3 py-1">
                         {client.type}
                       </Badge>
                     </TableCell>
-                    <TableCell>{client.idNumber}</TableCell>
-                    <TableCell>{client.expiryDate}</TableCell>
-                    <TableCell>
-                      <Badge variant="outline">{client.casesCount}</Badge>
+                    <TableCell className="py-4 font-medium">{client.idNumber}</TableCell>
+                    <TableCell className="py-4">{client.expiryDate}</TableCell>
+                    <TableCell className="py-4">
+                      <Badge variant="outline" className="px-3 py-1 font-semibold">{client.casesCount}</Badge>
                     </TableCell>
-                    <TableCell className="text-sm">
-                      <div>{client.phone}</div>
-                      <div className="text-muted-foreground">{client.email}</div>
+                    <TableCell className="text-sm py-4">
+                      <div className="font-medium">{client.phone}</div>
+                      <div className="text-muted-foreground mt-1">{client.email}</div>
                     </TableCell>
-                    <TableCell>
-                      <Button variant="ghost" size="sm">
+                    <TableCell className="px-6 py-4">
+                      <Button variant="ghost" size="sm" className="hover:bg-accent">
                         <Eye className="h-4 w-4 ml-1" />
                         عرض الملف
                       </Button>

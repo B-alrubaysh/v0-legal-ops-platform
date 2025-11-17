@@ -76,30 +76,30 @@ export function CasesListContent() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'قيد النظر': return 'bg-blue-100 text-blue-700 border-blue-200'
-      case 'مرافعة': return 'bg-yellow-100 text-yellow-700 border-yellow-200'
-      case 'تحقيق': return 'bg-purple-100 text-purple-700 border-purple-200'
-      case 'حكم نهائي': return 'bg-green-100 text-green-700 border-green-200'
-      default: return 'bg-gray-100 text-gray-700 border-gray-200'
+      case 'قيد النظر': return 'bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-950/30 dark:text-blue-400 dark:border-blue-800'
+      case 'مرافعة': return 'bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-950/30 dark:text-yellow-400 dark:border-yellow-800'
+      case 'تحقيق': return 'bg-purple-100 text-purple-700 border-purple-200 dark:bg-purple-950/30 dark:text-purple-400 dark:border-purple-800'
+      case 'حكم نهائي': return 'bg-green-100 text-green-700 border-green-200 dark:bg-green-950/30 dark:text-green-400 dark:border-green-800'
+      default: return 'bg-gray-100 text-gray-700 border-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700'
     }
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">القضايا</h1>
-          <p className="text-muted-foreground mt-2">إدارة جميع قضايا المكتب</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">القضايا</h1>
+          <p className="text-muted-foreground text-base">إدارة جميع قضايا المكتب</p>
         </div>
-        <Button className="bg-accent hover:bg-accent/90 text-accent-foreground">
+        <Button className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-sm">
           <Plus className="ml-2 h-4 w-4" />
           إضافة قضية جديدة
         </Button>
       </div>
 
       {/* Filters */}
-      <Card className="border-border">
+      <Card className="border-border shadow-sm">
         <CardContent className="p-6">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1 relative">
@@ -108,11 +108,11 @@ export function CasesListContent() {
                 placeholder="ابحث عن قضية..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pr-10"
+                className="pr-10 h-11"
               />
             </div>
             <Select>
-              <SelectTrigger className="w-full md:w-48">
+              <SelectTrigger className="w-full md:w-48 h-11">
                 <SelectValue placeholder="حالة القضية" />
               </SelectTrigger>
               <SelectContent>
@@ -123,7 +123,7 @@ export function CasesListContent() {
               </SelectContent>
             </Select>
             <Select>
-              <SelectTrigger className="w-full md:w-48">
+              <SelectTrigger className="w-full md:w-48 h-11">
                 <SelectValue placeholder="نوع القضية" />
               </SelectTrigger>
               <SelectContent>
@@ -139,38 +139,38 @@ export function CasesListContent() {
       </Card>
 
       {/* Cases Table */}
-      <Card className="border-border">
+      <Card className="border-border shadow-sm">
         <CardContent className="p-0">
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
-                <TableRow>
-                  <TableHead className="text-right">رقم القضية</TableHead>
-                  <TableHead className="text-right">اسم العميل</TableHead>
-                  <TableHead className="text-right">نوع القضية</TableHead>
-                  <TableHead className="text-right">الجهة القضائية</TableHead>
-                  <TableHead className="text-right">المحامي المسؤول</TableHead>
-                  <TableHead className="text-right">الحالة</TableHead>
-                  <TableHead className="text-right">الجلسة القادمة</TableHead>
-                  <TableHead className="text-right">الإجراءات</TableHead>
+                <TableRow className="hover:bg-transparent border-border">
+                  <TableHead className="text-right font-semibold h-14 px-6">رقم القضية</TableHead>
+                  <TableHead className="text-right font-semibold h-14">اسم العميل</TableHead>
+                  <TableHead className="text-right font-semibold h-14">نوع القضية</TableHead>
+                  <TableHead className="text-right font-semibold h-14">الجهة القضائية</TableHead>
+                  <TableHead className="text-right font-semibold h-14">المحامي المسؤول</TableHead>
+                  <TableHead className="text-right font-semibold h-14">الحالة</TableHead>
+                  <TableHead className="text-right font-semibold h-14">الجلسة القادمة</TableHead>
+                  <TableHead className="text-right font-semibold h-14 px-6">الإجراءات</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {cases.map((caseItem) => (
-                  <TableRow key={caseItem.id}>
-                    <TableCell className="font-medium">{caseItem.id}</TableCell>
-                    <TableCell>{caseItem.client}</TableCell>
-                    <TableCell>{caseItem.type}</TableCell>
-                    <TableCell className="max-w-xs truncate">{caseItem.court}</TableCell>
-                    <TableCell>{caseItem.lawyer}</TableCell>
-                    <TableCell>
+                {cases.map((caseItem, index) => (
+                  <TableRow key={caseItem.id} className={`${index % 2 === 0 ? 'bg-muted/30' : ''} hover:bg-muted/50 transition-colors border-border`}>
+                    <TableCell className="font-semibold px-6 py-4">{caseItem.id}</TableCell>
+                    <TableCell className="py-4">{caseItem.client}</TableCell>
+                    <TableCell className="py-4">{caseItem.type}</TableCell>
+                    <TableCell className="max-w-xs py-4">{caseItem.court}</TableCell>
+                    <TableCell className="py-4">{caseItem.lawyer}</TableCell>
+                    <TableCell className="py-4">
                       <Badge className={getStatusColor(caseItem.status)} variant="outline">
                         {caseItem.status}
                       </Badge>
                     </TableCell>
-                    <TableCell>{caseItem.nextSession}</TableCell>
-                    <TableCell>
-                      <Button variant="ghost" size="sm" asChild>
+                    <TableCell className="py-4 font-medium">{caseItem.nextSession}</TableCell>
+                    <TableCell className="px-6 py-4">
+                      <Button variant="ghost" size="sm" className="hover:bg-accent" asChild>
                         <Link href={`/dashboard/cases/${caseItem.id}`}>
                           <Eye className="h-4 w-4 ml-1" />
                           عرض
