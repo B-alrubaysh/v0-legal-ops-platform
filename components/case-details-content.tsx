@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Separator } from '@/components/ui/separator'
 import {
@@ -16,44 +17,99 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import { ArrowRight, Upload, Download, Calendar, MessageSquare, DollarSign, FileText, CheckCircle2, Clock } from 'lucide-react'
 import Link from 'next/link'
+import { casesData } from '@/lib/cases-data'
 
 export function CaseDetailsContent({ caseId }: { caseId: string }) {
   const [activeTab, setActiveTab] = useState('summary')
-
-  const caseData = {
-    id: caseId,
-    client: 'شركة النور للتجارة',
-    type: 'تجاري',
-    court: 'المحكمة التجارية بالرياض',
-    lawyer: 'أحمد الشمري',
-    status: 'قيد النظر',
-    openDate: '2025-01-10',
-    nextSession: '2025-01-20',
-    description: 'نزاع تجاري يتعلق بعقد توريد بين شركة النور للتجارة وشركة الأمل للمقاولات بقيمة 500,000 ريال سعودي'
-  }
-
-  const documents = [
-    { name: 'عقد التوريد الأصلي', category: 'عقود', date: '2025-01-10', size: '2.4 MB' },
-    { name: 'صحيفة الدعوى', category: 'مذكرات', date: '2025-01-12', size: '1.8 MB' },
-    { name: 'مستندات الإثبات', category: 'إثباتات', date: '2025-01-15', size: '5.2 MB' },
-  ]
-
-  const sessions = [
+  const [sessionDialogOpen, setSessionDialogOpen] = useState(false)
+  const [taskDialogOpen, setTaskDialogOpen] = useState(false)
+  const [sessions, setSessions] = useState([
     { type: 'جلسة استماع', date: '2025-01-20', time: '10:00 ص', location: 'قاعة 3', status: 'مجدولة' },
     { type: 'جلسة تمهيدية', date: '2025-01-05', time: '11:00 ص', location: 'قاعة 1', status: 'منتهية' },
-  ]
-
-  const tasks = [
+  ])
+  const [tasks, setTasks] = useState([
     { task: 'إعداد المذكرة الختامية', assignee: 'أحمد الشمري', deadline: '2025-01-18', status: 'قيد العمل' },
     { task: 'مراجعة المستندات الإضافية', assignee: 'فاطمة العلي', deadline: '2025-01-17', status: 'مكتمل' },
     { task: 'التواصل مع الشهود', assignee: 'خالد المطيري', deadline: '2025-01-19', status: 'معلق' },
+  ])
+
+  const caseData = casesData.find(c => c.id === caseId)
+
+  if (!caseData) {
+    return (
+      <div className="flex items-center justify-center min-h-96">
+        <Card className="border-border shadow-sm p-8">
+          <p className="text-lg text-muted-foreground text-center">لم يتم العثور على القضية</p>
+        </Card>
+      </div>
+    )
+  }
+
+  const handleAddSession = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const formData = new FormData(e.currentTarget)
+    const newSession = {
+      type: formData.get('session-type') as string,
+      date: formData.get('session-date') as string,
+      time: formData.get('session-time') as string,
+      location: formData.get('session-location') as string,
+      status: 'مجدولة'
+    }
+    setSessions([newSession, ...sessions])
+    setSessionDialogOpen(false)
+    e.currentTarget.reset()
+  }
+
+  const handleAddTask = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const formData = new FormData(e.currentTarget)
+    const newTask = {
+      task: formData.get('task-name') as string,
+      assignee: formData.get('task-assignee') as string,
+      deadline: formData.get('task-deadline') as string,
+      status: 'قيد العمل'
+    }
+    setTasks([newTask, ...tasks])
+    setTaskDialogOpen(false)
+    e.currentTarget.reset()
+  }
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'open': return 'bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-950/30 dark:text-blue-400 dark:border-blue-800'
+      case 'closed': return 'bg-green-100 text-green-700 border-green-200 dark:bg-green-950/30 dark:text-green-400 dark:border-green-800'
+      case 'on-hold': return 'bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-950/30 dark:text-yellow-400 dark:border-yellow-800'
+      default: return 'bg-gray-100 text-gray-700 border-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700'
+    }
+  }
+
+  const getStatusDisplay = (status: string) => {
+    switch (status) {
+      case 'open': return 'قيد النظر'
+      case 'closed': return 'مغلقة'
+      case 'on-hold': return 'معلقة'
+      default: return status
+    }
+  }
+
+  const documents = [
+    { name: 'عقد التوريد الأصلي', category: 'عقود', date: caseData.openDate, size: '2.4 MB' },
+    { name: 'صحيفة الدعوى', category: 'مذكرات', date: caseData.openDate, size: '1.8 MB' },
+    { name: 'مستندات الإثبات', category: 'إثباتات', date: caseData.openDate, size: '5.2 MB' },
   ]
 
   const communications = [
-    { message: 'تم استلام المستندات المطلوبة من العميل', time: 'منذ يومين', sender: 'أحمد الشمري' },
-    { message: 'استفسار العميل عن موعد الجلسة القادمة', time: 'منذ 3 أيام', sender: 'شركة النور للتجارة' },
+    { message: 'تم استلام المستندات المطلوبة من العميل', time: 'منذ يومين', sender: caseData.assignedLawyer },
+    { message: 'استفسار العميل عن موعد الجلسة القادمة', time: 'منذ 3 أيام', sender: caseData.clientName },
   ]
 
   return (
@@ -62,23 +118,23 @@ export function CaseDetailsContent({ caseId }: { caseId: string }) {
       <div className="flex items-center gap-2 text-sm text-muted-foreground">
         <Link href="/dashboard/cases" className="hover:text-foreground font-medium transition-colors">القضايا</Link>
         <ArrowRight className="h-4 w-4 rotate-180" />
-        <span className="text-foreground font-medium">{caseId}</span>
+        <span className="text-foreground font-medium">{caseData.number}</span>
       </div>
 
       {/* Case Header */}
       <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <h1 className="text-3xl font-bold text-foreground">{caseId}</h1>
-            <Badge className="bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-950/30 dark:text-blue-400 dark:border-blue-800 px-3 py-1" variant="outline">
-              {caseData.status}
+            <h1 className="text-3xl font-bold text-foreground">{caseData.number}</h1>
+            <Badge className={`${getStatusColor(caseData.status)} px-3 py-1`} variant="outline">
+              {getStatusDisplay(caseData.status)}
             </Badge>
           </div>
-          <p className="text-muted-foreground text-base">{caseData.client} - {caseData.type}</p>
+          <p className="text-muted-foreground text-base">{caseData.clientName} - {caseData.type}</p>
         </div>
         <div className="flex gap-3">
           <Button variant="outline" className="shadow-sm">تعديل</Button>
-          <Button className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-sm">
+          <Button className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-sm" onClick={() => setSessionDialogOpen(true)}>
             <Calendar className="ml-2 h-4 w-4" />
             جدولة جلسة
           </Button>
@@ -111,7 +167,7 @@ export function CaseDetailsContent({ caseId }: { caseId: string }) {
                 <div className="grid grid-cols-2 gap-x-6 gap-y-6">
                   <div>
                     <p className="text-sm font-medium text-muted-foreground mb-2">رقم القضية</p>
-                    <p className="font-semibold text-base">{caseData.id}</p>
+                    <p className="font-semibold text-base">{caseData.number}</p>
                   </div>
                   <div>
                     <p className="text-sm font-medium text-muted-foreground mb-2">نوع القضية</p>
@@ -123,7 +179,7 @@ export function CaseDetailsContent({ caseId }: { caseId: string }) {
                   </div>
                   <div>
                     <p className="text-sm font-medium text-muted-foreground mb-2">المحامي المسؤول</p>
-                    <p className="font-semibold text-base">{caseData.lawyer}</p>
+                    <p className="font-semibold text-base">{caseData.assignedLawyer}</p>
                   </div>
                   <div>
                     <p className="text-sm font-medium text-muted-foreground mb-2">تاريخ الفتح</p>
@@ -131,7 +187,7 @@ export function CaseDetailsContent({ caseId }: { caseId: string }) {
                   </div>
                   <div className="col-span-2">
                     <p className="text-sm font-medium text-muted-foreground mb-2">الجلسة القادمة</p>
-                    <p className="font-semibold text-base">{caseData.nextSession}</p>
+                    <p className="font-semibold text-base">{caseData.nextSessionDate || '-'}</p>
                   </div>
                 </div>
               </CardContent>
@@ -201,7 +257,7 @@ export function CaseDetailsContent({ caseId }: { caseId: string }) {
           <Card className="border-border shadow-sm">
             <CardHeader className="flex flex-row items-center justify-between pb-4 space-y-0">
               <CardTitle className="text-lg">الجلسات والمواعيد</CardTitle>
-              <Button className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-sm">
+              <Button className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-sm" onClick={() => setSessionDialogOpen(true)}>
                 <Calendar className="ml-2 h-4 w-4" />
                 إضافة جلسة
               </Button>
@@ -245,7 +301,7 @@ export function CaseDetailsContent({ caseId }: { caseId: string }) {
           <Card className="border-border shadow-sm">
             <CardHeader className="flex flex-row items-center justify-between pb-4 space-y-0">
               <CardTitle className="text-lg">المهام</CardTitle>
-              <Button className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-sm">
+              <Button className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-sm" onClick={() => setTaskDialogOpen(true)}>
                 إضافة مهمة
               </Button>
             </CardHeader>
@@ -376,6 +432,62 @@ export function CaseDetailsContent({ caseId }: { caseId: string }) {
           </div>
         </TabsContent>
       </Tabs>
+
+      <Dialog open={sessionDialogOpen} onOpenChange={setSessionDialogOpen}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>إضافة جلسة جديدة</DialogTitle>
+            <DialogDescription>جدولة جلسة جديدة للقضية {caseData.number}</DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleAddSession} className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="session-type">نوع الجلسة</Label>
+              <Input id="session-type" name="session-type" placeholder="جلسة استماع" required />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="session-date">التاريخ</Label>
+              <Input id="session-date" name="session-date" type="date" required />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="session-time">الوقت</Label>
+              <Input id="session-time" name="session-time" type="time" required />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="session-location">المكان</Label>
+              <Input id="session-location" name="session-location" placeholder="قاعة 3" required />
+            </div>
+            <Button type="submit" className="w-full bg-primary hover:bg-primary/90">
+              إضافة الجلسة
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={taskDialogOpen} onOpenChange={setTaskDialogOpen}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>إضافة مهمة جديدة</DialogTitle>
+            <DialogDescription>إنشاء مهمة مرتبطة بالقضية {caseData.number}</DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleAddTask} className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="task-name">اسم المهمة</Label>
+              <Input id="task-name" name="task-name" placeholder="إعداد المذكرة..." required />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="task-assignee">المسؤول</Label>
+              <Input id="task-assignee" name="task-assignee" placeholder="أحمد الشمري" required />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="task-deadline">الموعد النهائي</Label>
+              <Input id="task-deadline" name="task-deadline" type="date" required />
+            </div>
+            <Button type="submit" className="w-full bg-primary hover:bg-primary/90">
+              إضافة المهمة
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

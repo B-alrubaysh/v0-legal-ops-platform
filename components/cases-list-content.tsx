@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
+import { useRouter } from 'next/navigation'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -36,61 +37,34 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Plus, Search, Eye, FileText, MoreVertical } from 'lucide-react'
-import Link from 'next/link'
+import { casesData } from '@/lib/cases-data'
 
 export function CasesListContent() {
+  const router = useRouter()
   const [searchQuery, setSearchQuery] = useState('')
+  const [statusFilter, setStatusFilter] = useState('all')
+  const [courtFilter, setCourtFilter] = useState('all')
+  const [lawyerFilter, setLawyerFilter] = useState('all')
   const [letterDialogOpen, setLetterDialogOpen] = useState(false)
   const [pleadingDialogOpen, setPleadingDialogOpen] = useState(false)
   const [selectedCase, setSelectedCase] = useState<any>(null)
   
-  const cases = [
-    { 
-      id: 'ق-2025-001', 
-      client: 'شركة النور للتجارة', 
-      type: 'تجاري', 
-      court: 'المحكمة التجارية بالرياض',
-      lawyer: 'أحمد الشمري',
-      status: 'قيد النظر',
-      nextSession: '2025-01-20'
-    },
-    { 
-      id: 'ق-2025-002', 
-      client: 'محمد بن عبدالله', 
-      type: 'مدني', 
-      court: 'محكمة الأحوال المدنية',
-      lawyer: 'فاطمة العلي',
-      status: 'مرافعة',
-      nextSession: '2025-01-22'
-    },
-    { 
-      id: 'ق-2024-089', 
-      client: 'مؤسسة الأمل', 
-      type: 'عمالي', 
-      court: 'محكمة العمل',
-      lawyer: 'خالد المطيري',
-      status: 'تحقيق',
-      nextSession: '2025-01-24'
-    },
-    { 
-      id: 'ق-2025-008', 
-      client: 'سارة أحمد', 
-      type: 'أسري', 
-      court: 'محكمة الأحوال الشخصية',
-      lawyer: 'نورة السالم',
-      status: 'حكم نهائي',
-      nextSession: '-'
-    },
-    { 
-      id: 'ق-2025-015', 
-      client: 'شركة البناء المتقدم', 
-      type: 'تجاري', 
-      court: 'المحكمة التجارية بجدة',
-      lawyer: 'أحمد الشمري',
-      status: 'قيد النظر',
-      nextSession: '2025-02-05'
-    },
-  ]
+  const filteredCases = useMemo(() => {
+    return casesData.filter(caseItem => {
+      const matchesSearch = searchQuery === '' || 
+        caseItem.number.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        caseItem.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        caseItem.clientName.toLowerCase().includes(searchQuery.toLowerCase())
+      
+      const matchesStatus = statusFilter === 'all' || caseItem.status === statusFilter
+      
+      const matchesCourt = courtFilter === 'all' || caseItem.court === courtFilter
+      
+      const matchesLawyer = lawyerFilter === 'all' || caseItem.assignedLawyer === lawyerFilter
+      
+      return matchesSearch && matchesStatus && matchesCourt && matchesLawyer
+    })
+  }, [searchQuery, statusFilter, courtFilter, lawyerFilter])
 
   const handleCreateLetter = (e: React.FormEvent) => {
     e.preventDefault()
@@ -104,19 +78,26 @@ export function CasesListContent() {
     setPleadingDialogOpen(false)
   }
 
+  const getStatusDisplay = (status: string) => {
+    switch (status) {
+      case 'open': return 'قيد النظر'
+      case 'closed': return 'مغلقة'
+      case 'on-hold': return 'معلقة'
+      default: return status
+    }
+  }
+
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'قيد النظر': return 'bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-950/30 dark:text-blue-400 dark:border-blue-800'
-      case 'مرافعة': return 'bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-950/30 dark:text-yellow-400 dark:border-yellow-800'
-      case 'تحقيق': return 'bg-purple-100 text-purple-700 border-purple-200 dark:bg-purple-950/30 dark:text-purple-400 dark:border-purple-800'
-      case 'حكم نهائي': return 'bg-green-100 text-green-700 border-green-200 dark:bg-green-950/30 dark:text-green-400 dark:border-green-800'
+      case 'open': return 'bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-950/30 dark:text-blue-400 dark:border-blue-800'
+      case 'closed': return 'bg-green-100 text-green-700 border-green-200 dark:bg-green-950/30 dark:text-green-400 dark:border-green-800'
+      case 'on-hold': return 'bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-950/30 dark:text-yellow-400 dark:border-yellow-800'
       default: return 'bg-gray-100 text-gray-700 border-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700'
     }
   }
 
   return (
     <div className="space-y-8">
-      {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-foreground mb-2">القضايا</h1>
@@ -141,15 +122,15 @@ export function CasesListContent() {
                   className="pr-10 h-11"
                 />
               </div>
-              <Select>
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger className="w-full md:w-48 h-11">
                   <SelectValue placeholder="حالة القضية" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">جميع الحالات</SelectItem>
-                  <SelectItem value="pending">قيد النظر</SelectItem>
-                  <SelectItem value="active">مرافعة</SelectItem>
-                  <SelectItem value="closed">حكم نهائي</SelectItem>
+                  <SelectItem value="open">قيد النظر</SelectItem>
+                  <SelectItem value="closed">مغلقة</SelectItem>
+                  <SelectItem value="on-hold">معلقة</SelectItem>
                 </SelectContent>
               </Select>
               <Select>
@@ -166,28 +147,29 @@ export function CasesListContent() {
               </Select>
             </div>
             <div className="flex flex-col md:flex-row gap-4">
-              <Select>
+              <Select value={courtFilter} onValueChange={setCourtFilter}>
                 <SelectTrigger className="w-full md:w-64 h-11">
                   <SelectValue placeholder="المحكمة" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">جميع المحاكم</SelectItem>
-                  <SelectItem value="riyadh">المحكمة التجارية بالرياض</SelectItem>
-                  <SelectItem value="jeddah">المحكمة التجارية بجدة</SelectItem>
-                  <SelectItem value="civil">محكمة الأحوال الشخصية</SelectItem>
-                  <SelectItem value="labor">محكمة العمل</SelectItem>
+                  <SelectItem value="المحكمة التجارية بالرياض">المحكمة التجارية بالرياض</SelectItem>
+                  <SelectItem value="المحكمة التجارية بجدة">المحكمة التجارية بجدة</SelectItem>
+                  <SelectItem value="محكمة الأحوال الشخصية">محكمة الأحوال الشخصية</SelectItem>
+                  <SelectItem value="محكمة العمل">محكمة العمل</SelectItem>
+                  <SelectItem value="محكمة الأحوال المدنية">محكمة الأحوال المدنية</SelectItem>
                 </SelectContent>
               </Select>
-              <Select>
+              <Select value={lawyerFilter} onValueChange={setLawyerFilter}>
                 <SelectTrigger className="w-full md:w-64 h-11">
                   <SelectValue placeholder="المحامي المسؤول" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">جميع المحامين</SelectItem>
-                  <SelectItem value="ahmed">أحمد الشمري</SelectItem>
-                  <SelectItem value="fatima">فاطمة العلي</SelectItem>
-                  <SelectItem value="khaled">خالد المطيري</SelectItem>
-                  <SelectItem value="noura">نورة السالم</SelectItem>
+                  <SelectItem value="أحمد الشمري">أحمد الشمري</SelectItem>
+                  <SelectItem value="فاطمة العلي">فاطمة العلي</SelectItem>
+                  <SelectItem value="خالد المطيري">خالد المطيري</SelectItem>
+                  <SelectItem value="نورة السالم">نورة السالم</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -195,7 +177,6 @@ export function CasesListContent() {
         </CardContent>
       </Card>
 
-      {/* Cases Table */}
       <Card className="border-border shadow-sm">
         <CardContent className="p-0">
           <div className="overflow-x-auto">
@@ -213,26 +194,28 @@ export function CasesListContent() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {cases.map((caseItem, index) => (
-                  <TableRow key={caseItem.id} className={`${index % 2 === 0 ? 'bg-muted/30' : ''} hover:bg-muted/50 transition-colors border-border`}>
-                    <TableCell className="font-semibold text-sm px-6 py-4">{caseItem.id}</TableCell>
-                    <TableCell className="text-sm py-4">{caseItem.client}</TableCell>
+                {filteredCases.map((caseItem, index) => (
+                  <TableRow 
+                    key={caseItem.id} 
+                    className={`${index % 2 === 0 ? 'bg-muted/30' : ''} hover:bg-muted/50 transition-colors border-border cursor-pointer`}
+                    onClick={() => router.push(`/dashboard/cases/${caseItem.id}`)}
+                  >
+                    <TableCell className="font-semibold text-sm px-6 py-4">{caseItem.number}</TableCell>
+                    <TableCell className="text-sm py-4">{caseItem.clientName}</TableCell>
                     <TableCell className="text-sm py-4">{caseItem.type}</TableCell>
                     <TableCell className="max-w-xs text-sm py-4">{caseItem.court}</TableCell>
-                    <TableCell className="text-sm py-4">{caseItem.lawyer}</TableCell>
+                    <TableCell className="text-sm py-4">{caseItem.assignedLawyer}</TableCell>
                     <TableCell className="py-4">
                       <Badge className={`${getStatusColor(caseItem.status)} px-3 py-1 text-xs font-medium`} variant="outline">
-                        {caseItem.status}
+                        {getStatusDisplay(caseItem.status)}
                       </Badge>
                     </TableCell>
-                    <TableCell className="py-4 font-medium text-sm">{caseItem.nextSession}</TableCell>
-                    <TableCell className="px-6 py-4">
+                    <TableCell className="py-4 font-medium text-sm">{caseItem.nextSessionDate || '-'}</TableCell>
+                    <TableCell className="px-6 py-4" onClick={(e) => e.stopPropagation()}>
                       <div className="flex items-center gap-2">
-                        <Button variant="ghost" size="sm" className="hover:bg-accent h-9 px-3 text-xs" asChild>
-                          <Link href={`/dashboard/cases/${caseItem.id}`}>
-                            <Eye className="h-3.5 w-3.5 ml-1.5" />
-                            عرض
-                          </Link>
+                        <Button variant="ghost" size="sm" className="hover:bg-accent h-9 px-3 text-xs" onClick={() => router.push(`/dashboard/cases/${caseItem.id}`)}>
+                          <Eye className="h-3.5 w-3.5 ml-1.5" />
+                          عرض
                         </Button>
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
@@ -276,11 +259,11 @@ export function CasesListContent() {
           <form onSubmit={handleCreateLetter} className="space-y-4 py-4">
             <div className="space-y-2">
               <Label>رقم القضية</Label>
-              <Input value={selectedCase?.id || ''} disabled className="bg-muted" />
+              <Input value={selectedCase?.number || ''} disabled className="bg-muted" />
             </div>
             <div className="space-y-2">
               <Label>اسم العميل</Label>
-              <Input value={selectedCase?.client || ''} disabled className="bg-muted" />
+              <Input value={selectedCase?.clientName || ''} disabled className="bg-muted" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="letter-content">محتوى الخطاب</Label>
@@ -306,7 +289,7 @@ export function CasesListContent() {
           <form onSubmit={handleCreatePleading} className="space-y-4 py-4">
             <div className="space-y-2">
               <Label>رقم القضية</Label>
-              <Input value={selectedCase?.id || ''} disabled className="bg-muted" />
+              <Input value={selectedCase?.number || ''} disabled className="bg-muted" />
             </div>
             <div className="space-y-2">
               <Label>نوع القضية</Label>

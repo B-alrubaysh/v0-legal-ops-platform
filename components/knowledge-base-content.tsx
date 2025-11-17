@@ -5,75 +5,144 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
-import { Search, FileText, Download, FolderOpen } from 'lucide-react'
+import { Search, FileText, Lightbulb } from 'lucide-react'
+
+type Doc = {
+  id: string
+  title: string
+  type: 'law' | 'policy' | 'template'
+  summary: string
+  content: string
+  tags: string[]
+}
+
+const docs: Doc[] = [
+  {
+    id: '1',
+    title: 'نظام المرافعات الشرعية - المادة 34',
+    type: 'law',
+    summary: 'توضح المادة 34 من نظام المرافعات الشرعية الإجراءات المتعلقة بتقديم الدعوى والمستندات المطلوبة.',
+    content: 'تنص المادة على أنه يجب على المدعي تقديم صحيفة دعواه متضمنة البيانات اللازمة والمستندات المؤيدة لطلباته. ويجب أن تكون الصحيفة واضحة ومحددة في بياناتها وطلباتها، وأن ترفق بها المستندات اللازمة لإثبات الدعوى.',
+    tags: ['مرافعات', 'إجراءات', 'دعوى']
+  },
+  {
+    id: '2',
+    title: 'سياسة حماية البيانات الشخصية',
+    type: 'policy',
+    summary: 'سياسة داخلية تحدد كيفية التعامل مع بيانات العملاء والحفاظ على سريتها وفقاً للأنظمة السعودية.',
+    content: 'تلتزم المؤسسة بحماية جميع البيانات الشخصية للعملاء وعدم مشاركتها مع أطراف ثالثة إلا بموافقة صريحة أو بناءً على متطلب نظامي. يتم تخزين البيانات بطرق آمنة وتشفيرها عند الضرورة.',
+    tags: ['خصوصية', 'بيانات', 'حماية']
+  },
+  {
+    id: '3',
+    title: 'نموذج عقد استشارة قانونية',
+    type: 'template',
+    summary: 'نموذج عقد قابل للتخصيص لتقديم خدمات الاستشارة القانونية للعملاء.',
+    content: 'عقد استشارة قانونية\n\nبين كل من:\n\nالطرف الأول: [اسم المكتب]\nالطرف الثاني: [اسم العميل]\n\nيتفق الطرفان على ما يلي:\n1. يقدم الطرف الأول خدمات استشارية قانونية في [المجال]\n2. مدة العقد: [المدة]\n3. الأتعاب: [المبلغ]\n4. يلتزم الطرف الأول بالحفاظ على سرية معلومات العميل',
+    tags: ['عقود', 'استشارة', 'نموذج']
+  },
+  {
+    id: '4',
+    title: 'نظام العمل - حقوق الموظف',
+    type: 'law',
+    summary: 'ملخص للحقوق الأساسية للموظف في القطاع الخاص وفقاً لنظام العمل السعودي.',
+    content: 'يحق للموظف الحصول على راتب شهري محدد، إجازة سنوية لا تقل عن 21 يوماً، إجازة مرضية بأجر كامل لمدة 30 يوماً، والحصول على مكافأة نهاية خدمة. كما يحق له بيئة عمل آمنة وصحية.',
+    tags: ['عمل', 'موظفين', 'حقوق']
+  },
+  {
+    id: '5',
+    title: 'نموذج عقد توريد',
+    type: 'template',
+    summary: 'نموذج عقد شامل لتوريد البضائع والخدمات مع شروط التسليم والدفع.',
+    content: 'عقد توريد\n\nالطرف الأول (المورد): [الاسم]\nالطرف الثاني (العميل): [الاسم]\n\n1. البضائع المتفق عليها: [الوصف]\n2. الكمية: [العدد]\n3. السعر الإجمالي: [المبلغ]\n4. موعد التسليم: [التاريخ]\n5. شروط الدفع: [التفاصيل]\n6. الضمانات: [المدة والشروط]',
+    tags: ['عقود', 'توريد', 'تجاري']
+  },
+  {
+    id: '6',
+    title: 'سياسة التعامل مع النزاعات',
+    type: 'policy',
+    summary: 'إجراءات داخلية للتعامل مع النزاعات بين العملاء أو مع أطراف خارجية.',
+    content: 'عند حدوث نزاع، يتم أولاً محاولة التسوية الودية من خلال الحوار والتفاوض. في حالة فشل ذلك، يتم اللجوء إلى التحكيم أو الوساطة قبل التوجه للمحاكم. يتم توثيق جميع مراحل النزاع والمراسلات.',
+    tags: ['نزاعات', 'إجراءات', 'تسوية']
+  },
+  {
+    id: '7',
+    title: 'نظام الإفلاس - إجراءات التصفية',
+    type: 'law',
+    summary: 'نظرة عامة على إجراءات تصفية الشركات المفلسة وحقوق الدائنين.',
+    content: 'ينظم نظام الإفلاس إجراءات تصفية الشركات المتعثرة بما يضمن حقوق الدائنين. يتم تعيين أمين تصفية لإدارة أصول الشركة وتوزيعها على الدائنين بحسب الأولوية المحددة نظاماً.',
+    tags: ['إفلاس', 'تصفية', 'شركات']
+  },
+  {
+    id: '8',
+    title: 'نموذج مذكرة دفاع',
+    type: 'template',
+    summary: 'نموذج لإعداد مذكرة دفاع شاملة في القضايا المدنية والتجارية.',
+    content: 'مذكرة دفاع\n\nإلى المحكمة الموقرة\n\nبالإشارة إلى القضية رقم: [الرقم]\n\nالموضوع: [عنوان القضية]\n\nالوقائع:\n[سرد الوقائع]\n\nالدفوع:\n1. [الدفع الأول]\n2. [الدفع الثاني]\n\nالطلبات:\nبناء عليه نلتمس من المحكمة الموقرة...',
+    tags: ['مذكرات', 'دفاع', 'نموذج']
+  },
+  {
+    id: '9',
+    title: 'سياسة الأتعاب والفوترة',
+    type: 'policy',
+    summary: 'سياسة داخلية لتحديد أتعاب الخدمات القانونية وإجراءات الفوترة.',
+    content: 'يتم احتساب الأتعاب بناءً على طبيعة القضية، الوقت المستغرق، وخبرة المحامي. يتم إصدار فاتورة تفصيلية للعميل شهرياً أو عند إنجاز كل مرحلة. يحق للعميل الاستفسار عن تفاصيل الأتعاب في أي وقت.',
+    tags: ['أتعاب', 'فوترة', 'مالية']
+  },
+  {
+    id: '10',
+    title: 'نظام الشركات - تأسيس الشركة',
+    type: 'law',
+    summary: 'المتطلبات القانونية والإجراءات اللازمة لتأسيس شركة في المملكة العربية السعودية.',
+    content: 'يتطلب تأسيس الشركة إعداد عقد التأسيس والنظام الأساسي، تحديد رأس المال، تسجيل الشركة في وزارة التجارة، والحصول على السجل التجاري. يجب توافر الحد الأدنى من الشركاء حسب نوع الشركة.',
+    tags: ['شركات', 'تأسيس', 'تجاري']
+  }
+]
 
 export function KnowledgeBaseContent() {
   const [searchQuery, setSearchQuery] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState('all')
+  const [typeFilter, setTypeFilter] = useState<'all' | 'law' | 'policy' | 'template'>('all')
+  const [selectedDocId, setSelectedDocId] = useState<string | null>(null)
 
-  const categories = [
-    { id: 'all', name: 'الكل', count: 45 },
-    { id: 'briefs', name: 'مذكرات قانونية', count: 18 },
-    { id: 'contracts', name: 'نماذج عقود', count: 12 },
-    { id: 'precedents', name: 'سوابق قضائية', count: 10 },
-    { id: 'notes', name: 'ملاحظات داخلية', count: 5 },
-  ]
+  const filteredDocs = docs.filter(doc => {
+    // Type filter
+    if (typeFilter !== 'all' && doc.type !== typeFilter) {
+      return false
+    }
+    
+    // Search filter
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase()
+      return (
+        doc.title.toLowerCase().includes(query) ||
+        doc.summary.toLowerCase().includes(query) ||
+        doc.tags.some(tag => tag.toLowerCase().includes(query))
+      )
+    }
+    
+    return true
+  })
 
-  const documents = [
-    { 
-      name: 'نموذج عقد توريد', 
-      category: 'نماذج عقود',
-      categoryId: 'contracts',
-      date: '2024-12-15',
-      author: 'أحمد الشمري',
-      tags: ['عقود', 'توريد', 'تجاري']
-    },
-    { 
-      name: 'مذكرة قانونية - النزاعات التجارية', 
-      category: 'مذكرات قانونية',
-      categoryId: 'briefs',
-      date: '2024-12-10',
-      author: 'فاطمة العلي',
-      tags: ['تجاري', 'نزاعات']
-    },
-    { 
-      name: 'سابقة قضائية - قضايا العمل', 
-      category: 'سوابق قضائية',
-      categoryId: 'precedents',
-      date: '2024-11-20',
-      author: 'خالد المطيري',
-      tags: ['عمالي', 'أحكام']
-    },
-    { 
-      name: 'نموذج عقد استشارة قانونية', 
-      category: 'نماذج عقود',
-      categoryId: 'contracts',
-      date: '2024-11-15',
-      author: 'نورة السالم',
-      tags: ['عقود', 'استشارة']
-    },
-    { 
-      name: 'ملاحظات حول الإجراءات المدنية', 
-      category: 'ملاحظات داخلية',
-      categoryId: 'notes',
-      date: '2024-10-25',
-      author: 'أحمد الشمري',
-      tags: ['مدني', 'إجراءات']
-    },
-    { 
-      name: 'مذكرة دفاع نموذجية', 
-      category: 'مذكرات قانونية',
-      categoryId: 'briefs',
-      date: '2024-10-10',
-      author: 'فاطمة العلي',
-      tags: ['مذكرات', 'دفاع']
-    },
-  ]
+  const selectedDoc = selectedDocId 
+    ? docs.find(d => d.id === selectedDocId) 
+    : filteredDocs[0]
 
-  const filteredDocuments = documents.filter(doc => 
-    (selectedCategory === 'all' || doc.categoryId === selectedCategory) &&
-    (searchQuery === '' || doc.name.includes(searchQuery))
-  )
+  const getSuggestion = (type: 'law' | 'policy' | 'template') => {
+    switch (type) {
+      case 'law':
+        return 'ينبغي مراجعة هذه المادة قبل الرد على الدعوى وتطبيقها على وقائع القضية.'
+      case 'policy':
+        return 'يُنصح بتطبيق هذه السياسة على جميع الملفات ذات الصلة لضمان الامتثال.'
+      case 'template':
+        return 'تذكر تخصيص هذا النموذج حسب تفاصيل القضية أو العميل المحدد.'
+    }
+  }
+
+  const typeLabels = {
+    law: 'قانون',
+    policy: 'سياسة',
+    template: 'نموذج'
+  }
 
   return (
     <div className="space-y-8">
@@ -83,84 +152,159 @@ export function KnowledgeBaseContent() {
         <p className="text-muted-foreground text-base leading-relaxed">مكتبة المستندات والموارد القانونية</p>
       </div>
 
-      {/* Search */}
+      {/* Search and Filter */}
       <Card className="border-border shadow-sm">
         <CardContent className="p-6">
-          <div className="relative">
-            <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="ابحث في قاعدة المعرفة..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pr-10 h-11"
-            />
+          <div className="flex flex-col gap-4 md:flex-row md:items-center">
+            <div className="relative flex-1">
+              <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="ابحث في قاعدة المعرفة..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pr-10 h-11"
+              />
+            </div>
+            <div className="flex gap-2">
+              <Button
+                variant={typeFilter === 'all' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setTypeFilter('all')}
+                className="h-11"
+              >
+                الكل
+              </Button>
+              <Button
+                variant={typeFilter === 'law' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setTypeFilter('law')}
+                className="h-11"
+              >
+                قوانين
+              </Button>
+              <Button
+                variant={typeFilter === 'policy' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setTypeFilter('policy')}
+                className="h-11"
+              >
+                سياسات
+              </Button>
+              <Button
+                variant={typeFilter === 'template' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setTypeFilter('template')}
+                className="h-11"
+              >
+                نماذج
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>
 
-      <div className="grid gap-6 lg:grid-cols-4">
-        {/* Categories Sidebar */}
-        <Card className="border-border shadow-sm">
-          <CardContent className="p-6">
-            <h3 className="font-semibold text-xl mb-5">التصنيفات</h3>
-            <div className="space-y-2">
-              {categories.map((category) => (
-                <button
-                  key={category.id}
-                  onClick={() => setSelectedCategory(category.id)}
-                  className={`w-full flex items-center justify-between p-3 rounded-lg transition-all ${
-                    selectedCategory === category.id
-                      ? 'bg-primary text-primary-foreground shadow-sm' 
-                      : 'hover:bg-muted text-foreground'
-                  }`}
-                >
-                  <div className="flex items-center gap-2.5">
-                    <FolderOpen className="h-4 w-4" />
-                    <span className="text-sm font-medium">{category.name}</span>
-                  </div>
-                  <Badge variant={selectedCategory === category.id ? 'secondary' : 'outline'} className="px-2.5 py-0.5 text-xs font-medium">
-                    {category.count}
-                  </Badge>
-                </button>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Documents List */}
-        <div className="lg:col-span-3 space-y-4">
-          {filteredDocuments.map((doc, index) => (
-            <Card key={index} className="border-border shadow-sm hover:shadow-md transition-all">
-              <CardContent className="p-6">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center flex-shrink-0 shadow-sm">
-                    <FileText className="h-6 w-6 text-muted-foreground" />
+      <div className="grid gap-6 lg:grid-cols-3">
+        {/* Documents List - Left Side */}
+        <div className="space-y-3">
+          {filteredDocs.map((doc) => (
+            <Card 
+              key={doc.id}
+              className={`border-border shadow-sm hover:shadow-md transition-all cursor-pointer ${
+                selectedDoc?.id === doc.id ? 'ring-2 ring-primary shadow-md' : ''
+              }`}
+              onClick={() => setSelectedDocId(doc.id)}
+            >
+              <CardContent className="p-4">
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center flex-shrink-0">
+                    <FileText className="h-5 w-5 text-muted-foreground" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-lg mb-2.5 text-foreground">{doc.name}</h3>
-                    <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground mb-4">
-                      <span className="font-medium">{doc.category}</span>
-                      <span>•</span>
-                      <span>بواسطة {doc.author}</span>
-                      <span>•</span>
-                      <span>{doc.date}</span>
+                    <h3 className="font-semibold text-sm mb-1.5 text-foreground line-clamp-2">{doc.title}</h3>
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="secondary" className="text-xs px-2 py-0.5">
+                        {typeLabels[doc.type]}
+                      </Badge>
                     </div>
-                    <div className="flex flex-wrap gap-2">
-                      {doc.tags.map((tag, tagIndex) => (
-                        <Badge key={tagIndex} variant="secondary" className="text-xs px-2.5 py-1 font-medium">
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
+                    <p className="text-xs text-muted-foreground line-clamp-2">{doc.summary}</p>
                   </div>
-                  <Button variant="outline" size="sm" className="shadow-sm hover:shadow h-9 px-4 text-xs">
-                    <Download className="h-3.5 w-3.5 ml-1.5" />
-                    تحميل
-                  </Button>
                 </div>
               </CardContent>
             </Card>
           ))}
+          
+          {filteredDocs.length === 0 && (
+            <Card className="border-border shadow-sm">
+              <CardContent className="p-8 text-center">
+                <p className="text-muted-foreground">لا توجد مستندات مطابقة</p>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+
+        {/* Document Preview - Right Side */}
+        <div className="lg:col-span-2">
+          {selectedDoc ? (
+            <Card className="border-border shadow-sm">
+              <CardContent className="p-6 space-y-6">
+                <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900 rounded-lg p-4">
+                  <div className="flex items-start gap-3">
+                    <Lightbulb className="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <h4 className="font-semibold text-sm text-blue-900 dark:text-blue-100 mb-1">اقتراح من النظام</h4>
+                      <p className="text-sm text-blue-800 dark:text-blue-200 leading-relaxed">
+                        {getSuggestion(selectedDoc.type)}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Document Details */}
+                <div>
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex-1">
+                      <h2 className="text-2xl font-bold text-foreground mb-3">{selectedDoc.title}</h2>
+                      <Badge variant="secondary" className="text-sm px-3 py-1">
+                        {typeLabels[selectedDoc.type]}
+                      </Badge>
+                    </div>
+                  </div>
+
+                  <div className="space-y-5">
+                    <div>
+                      <h3 className="font-semibold text-lg mb-2 text-foreground">ملخص</h3>
+                      <p className="text-muted-foreground leading-relaxed">{selectedDoc.summary}</p>
+                    </div>
+
+                    <div>
+                      <h3 className="font-semibold text-lg mb-2 text-foreground">الوسوم</h3>
+                      <div className="flex flex-wrap gap-2">
+                        {selectedDoc.tags.map((tag, index) => (
+                          <Badge key={index} variant="outline" className="text-sm px-3 py-1">
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <h3 className="font-semibold text-lg mb-2 text-foreground">المحتوى</h3>
+                      <div className="bg-muted rounded-lg p-5">
+                        <p className="text-foreground leading-relaxed whitespace-pre-wrap">{selectedDoc.content}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ) : (
+            <Card className="border-border shadow-sm">
+              <CardContent className="p-12 text-center">
+                <FileText className="h-16 w-16 text-muted-foreground mx-auto mb-4 opacity-50" />
+                <p className="text-muted-foreground text-lg">اختر مستنداً لعرض تفاصيله</p>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
     </div>
