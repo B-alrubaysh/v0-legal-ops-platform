@@ -76,15 +76,15 @@ export function KnowledgeBaseContent() {
   )
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Page Header */}
       <div>
-        <h1 className="text-3xl font-bold text-foreground">قاعدة المعرفة</h1>
-        <p className="text-muted-foreground mt-2">مكتبة المستندات والموارد القانونية</p>
+        <h1 className="text-3xl font-bold text-foreground mb-2">قاعدة المعرفة</h1>
+        <p className="text-muted-foreground text-base leading-relaxed">مكتبة المستندات والموارد القانونية</p>
       </div>
 
       {/* Search */}
-      <Card className="border-border">
+      <Card className="border-border shadow-sm">
         <CardContent className="p-6">
           <div className="relative">
             <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -92,7 +92,7 @@ export function KnowledgeBaseContent() {
               placeholder="ابحث في قاعدة المعرفة..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pr-10"
+              className="pr-10 h-11"
             />
           </div>
         </CardContent>
@@ -100,25 +100,25 @@ export function KnowledgeBaseContent() {
 
       <div className="grid gap-6 lg:grid-cols-4">
         {/* Categories Sidebar */}
-        <Card className="border-border">
+        <Card className="border-border shadow-sm">
           <CardContent className="p-6">
-            <h3 className="font-semibold mb-4">التصنيفات</h3>
+            <h3 className="font-semibold text-xl mb-5">التصنيفات</h3>
             <div className="space-y-2">
               {categories.map((category) => (
                 <button
                   key={category.id}
                   onClick={() => setSelectedCategory(category.id)}
-                  className={`w-full flex items-center justify-between p-3 rounded-lg transition-colors ${
+                  className={`w-full flex items-center justify-between p-3 rounded-lg transition-all ${
                     selectedCategory === category.id
-                      ? 'bg-primary text-primary-foreground'
-                      : 'hover:bg-muted'
+                      ? 'bg-primary text-primary-foreground shadow-sm' 
+                      : 'hover:bg-muted text-foreground'
                   }`}
                 >
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2.5">
                     <FolderOpen className="h-4 w-4" />
-                    <span className="text-sm">{category.name}</span>
+                    <span className="text-sm font-medium">{category.name}</span>
                   </div>
-                  <Badge variant={selectedCategory === category.id ? 'secondary' : 'outline'}>
+                  <Badge variant={selectedCategory === category.id ? 'secondary' : 'outline'} className="px-2.5 py-0.5 text-xs font-medium">
                     {category.count}
                   </Badge>
                 </button>
@@ -130,16 +130,16 @@ export function KnowledgeBaseContent() {
         {/* Documents List */}
         <div className="lg:col-span-3 space-y-4">
           {filteredDocuments.map((doc, index) => (
-            <Card key={index} className="border-border hover:shadow-lg transition-shadow">
+            <Card key={index} className="border-border shadow-sm hover:shadow-md transition-all">
               <CardContent className="p-6">
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center flex-shrink-0 shadow-sm">
                     <FileText className="h-6 w-6 text-muted-foreground" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-lg mb-2 text-foreground">{doc.name}</h3>
-                    <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground mb-3">
-                      <span>{doc.category}</span>
+                    <h3 className="font-semibold text-lg mb-2.5 text-foreground">{doc.name}</h3>
+                    <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground mb-4">
+                      <span className="font-medium">{doc.category}</span>
                       <span>•</span>
                       <span>بواسطة {doc.author}</span>
                       <span>•</span>
@@ -147,14 +147,14 @@ export function KnowledgeBaseContent() {
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {doc.tags.map((tag, tagIndex) => (
-                        <Badge key={tagIndex} variant="secondary" className="text-xs">
+                        <Badge key={tagIndex} variant="secondary" className="text-xs px-2.5 py-1 font-medium">
                           {tag}
                         </Badge>
                       ))}
                     </div>
                   </div>
-                  <Button variant="outline" size="sm">
-                    <Download className="h-4 w-4 ml-1" />
+                  <Button variant="outline" size="sm" className="shadow-sm hover:shadow h-9 px-4 text-xs">
+                    <Download className="h-3.5 w-3.5 ml-1.5" />
                     تحميل
                   </Button>
                 </div>

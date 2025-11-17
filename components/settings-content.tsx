@@ -30,57 +30,57 @@ export function SettingsContent() {
   ]
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Page Header */}
       <div>
-        <h1 className="text-3xl font-bold text-foreground">الإعدادات</h1>
-        <p className="text-muted-foreground mt-2">إدارة إعدادات المنصة والصلاحيات</p>
+        <h1 className="text-3xl font-bold text-foreground mb-2">الإعدادات</h1>
+        <p className="text-muted-foreground text-base leading-relaxed">إدارة إعدادات المنصة والصلاحيات</p>
       </div>
 
       {/* Settings Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 gap-2">
-          <TabsTrigger value="office">إعدادات المكتب</TabsTrigger>
-          <TabsTrigger value="users">إدارة المستخدمين</TabsTrigger>
-          <TabsTrigger value="notifications">الإشعارات</TabsTrigger>
-          <TabsTrigger value="branding">الهوية البصرية</TabsTrigger>
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
+        <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 gap-2 h-auto p-1">
+          <TabsTrigger value="office" className="h-10">إعدادات المكتب</TabsTrigger>
+          <TabsTrigger value="users" className="h-10">إدارة المستخدمين</TabsTrigger>
+          <TabsTrigger value="notifications" className="h-10">الإشعارات</TabsTrigger>
+          <TabsTrigger value="branding" className="h-10">الهوية البصرية</TabsTrigger>
         </TabsList>
 
         {/* Office Settings Tab */}
         <TabsContent value="office" className="space-y-6">
-          <Card className="border-border">
-            <CardHeader>
-              <CardTitle>معلومات المكتب</CardTitle>
-              <CardDescription>تحديث معلومات المكتب الأساسية</CardDescription>
+          <Card className="border-border shadow-sm">
+            <CardHeader className="pb-5">
+              <CardTitle className="text-xl font-semibold">معلومات المكتب</CardTitle>
+              <CardDescription className="text-base mt-2">تحديث معلومات المكتب الأساسية</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="grid gap-6 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="office-name">اسم المكتب</Label>
-                  <Input id="office-name" defaultValue="مكتب الشمري للمحاماة" />
+                <div className="space-y-2.5">
+                  <Label htmlFor="office-name" className="text-sm font-medium">اسم المكتب</Label>
+                  <Input id="office-name" defaultValue="مكتب الشمري للمحاماة" className="h-11" />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="office-license">رقم الترخيص</Label>
-                  <Input id="office-license" defaultValue="123456789" />
+                <div className="space-y-2.5">
+                  <Label htmlFor="office-license" className="text-sm font-medium">رقم الترخيص</Label>
+                  <Input id="office-license" defaultValue="123456789" className="h-11" />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="office-phone">رقم الهاتف</Label>
-                  <Input id="office-phone" defaultValue="+966 50 123 4567" />
+                <div className="space-y-2.5">
+                  <Label htmlFor="office-phone" className="text-sm font-medium">رقم الهاتف</Label>
+                  <Input id="office-phone" defaultValue="+966 50 123 4567" className="h-11" />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="office-email">البريد الإلكتروني</Label>
-                  <Input id="office-email" type="email" defaultValue="info@lawfirm.sa" />
+                <div className="space-y-2.5">
+                  <Label htmlFor="office-email" className="text-sm font-medium">البريد الإلكتروني</Label>
+                  <Input id="office-email" type="email" defaultValue="info@lawfirm.sa" className="h-11" />
                 </div>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="office-address">العنوان</Label>
+              <div className="space-y-2.5">
+                <Label htmlFor="office-address" className="text-sm font-medium">العنوان</Label>
                 <Textarea 
                   id="office-address" 
                   defaultValue="الرياض - حي العليا - طريق الملك فهد"
-                  className="min-h-20"
+                  className="min-h-24 resize-none"
                 />
               </div>
-              <Button className="bg-accent hover:bg-accent/90 text-accent-foreground">
+              <Button className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-sm h-11 px-6">
                 <Save className="ml-2 h-4 w-4" />
                 حفظ التغييرات
               </Button>
@@ -90,101 +90,101 @@ export function SettingsContent() {
 
         {/* Users Management Tab */}
         <TabsContent value="users" className="space-y-6">
-          <Card className="border-border">
-            <CardHeader className="flex flex-row items-center justify-between">
+          <Card className="border-border shadow-sm">
+            <CardHeader className="flex flex-row items-center justify-between pb-5 space-y-0">
               <div>
-                <CardTitle>المستخدمون والصلاحيات</CardTitle>
-                <CardDescription>إدارة فريق العمل والصلاحيات</CardDescription>
+                <CardTitle className="text-xl font-semibold">المستخدمون والصلاحيات</CardTitle>
+                <CardDescription className="text-base mt-2">إدارة فريق العمل والصلاحيات</CardDescription>
               </div>
-              <Button className="bg-accent hover:bg-accent/90 text-accent-foreground">
+              <Button className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-sm h-11 px-5">
                 إضافة مستخدم
               </Button>
             </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="text-right">الاسم</TableHead>
-                    <TableHead className="text-right">البريد الإلكتروني</TableHead>
-                    <TableHead className="text-right">الدور</TableHead>
-                    <TableHead className="text-right">الحالة</TableHead>
-                    <TableHead className="text-right">الإجراءات</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {users.map((user, index) => (
-                    <TableRow key={index}>
-                      <TableCell className="font-medium">{user.name}</TableCell>
-                      <TableCell>{user.email}</TableCell>
-                      <TableCell>
-                        <Badge variant={user.role === 'مدير' ? 'default' : 'secondary'}>
-                          {user.role}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline" className="bg-green-100 text-green-700 border-green-200">
-                          {user.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Button variant="ghost" size="sm">
-                          تعديل
-                        </Button>
-                      </TableCell>
+            <CardContent className="p-0">
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="hover:bg-transparent border-border">
+                      <TableHead className="text-right font-semibold text-sm h-14 px-6">الاسم</TableHead>
+                      <TableHead className="text-right font-semibold text-sm h-14">البريد الإلكتروني</TableHead>
+                      <TableHead className="text-right font-semibold text-sm h-14">الدور</TableHead>
+                      <TableHead className="text-right font-semibold text-sm h-14">الحالة</TableHead>
+                      <TableHead className="text-right font-semibold text-sm h-14 px-6">الإجراءات</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {users.map((user, index) => (
+                      <TableRow key={index} className={`${index % 2 === 0 ? 'bg-muted/30' : ''} hover:bg-muted/50 transition-colors border-border`}>
+                        <TableCell className="font-semibold text-sm px-6 py-4">{user.name}</TableCell>
+                        <TableCell className="text-sm py-4">{user.email}</TableCell>
+                        <TableCell className="py-4">
+                          <Badge variant={user.role === 'مدير' ? 'default' : 'secondary'} className="px-3 py-1 text-xs font-medium">
+                            {user.role}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="py-4">
+                          <Badge variant="outline" className="bg-green-100 text-green-700 border-green-200 dark:bg-green-950/30 dark:text-green-400 dark:border-green-800 px-3 py-1 text-xs font-medium">
+                            {user.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="px-6 py-4">
+                          <Button variant="ghost" size="sm" className="hover:bg-accent h-9 px-3 text-xs">
+                            تعديل
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
 
         {/* Notifications Tab */}
         <TabsContent value="notifications" className="space-y-6">
-          <Card className="border-border">
-            <CardHeader>
-              <CardTitle>إعدادات الإشعارات</CardTitle>
-              <CardDescription>تخصيص تلقي الإشعارات والتنبيهات</CardDescription>
+          <Card className="border-border shadow-sm">
+            <CardHeader className="pb-5">
+              <CardTitle className="text-xl font-semibold">إعدادات الإشعارات</CardTitle>
+              <CardDescription className="text-base mt-2">تخصيص تلقي الإشعارات والتنبيهات</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 rounded-lg border border-border">
-                  <div className="space-y-1">
-                    <p className="font-medium">إشعارات الجلسات القادمة</p>
-                    <p className="text-sm text-muted-foreground">استلام تنبيهات قبل موعد الجلسات</p>
-                  </div>
-                  <Switch defaultChecked />
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between p-5 rounded-lg border border-border hover:bg-muted/30 transition-colors">
+                <div className="space-y-1">
+                  <p className="font-medium text-base">إشعارات الجلسات القادمة</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed">استلام تنبيهات قبل موعد الجلسات</p>
                 </div>
-                <div className="flex items-center justify-between p-4 rounded-lg border border-border">
-                  <div className="space-y-1">
-                    <p className="font-medium">إشعارات القضايا الجديدة</p>
-                    <p className="text-sm text-muted-foreground">تلقي تنبيه عند إضافة قضية جديدة</p>
-                  </div>
-                  <Switch defaultChecked />
-                </div>
-                <div className="flex items-center justify-between p-4 rounded-lg border border-border">
-                  <div className="space-y-1">
-                    <p className="font-medium">إشعارات المستندات</p>
-                    <p className="text-sm text-muted-foreground">تنبيه عند رفع مستند جديد</p>
-                  </div>
-                  <Switch defaultChecked />
-                </div>
-                <div className="flex items-center justify-between p-4 rounded-lg border border-border">
-                  <div className="space-y-1">
-                    <p className="font-medium">إشعارات المهام</p>
-                    <p className="text-sm text-muted-foreground">تذكير بالمهام المعلقة والمواعيد النهائية</p>
-                  </div>
-                  <Switch defaultChecked />
-                </div>
-                <div className="flex items-center justify-between p-4 rounded-lg border border-border">
-                  <div className="space-y-1">
-                    <p className="font-medium">ملخص يومي</p>
-                    <p className="text-sm text-muted-foreground">إرسال ملخص يومي بالبريد الإلكتروني</p>
-                  </div>
-                  <Switch />
-                </div>
+                <Switch defaultChecked />
               </div>
-              <Button className="bg-accent hover:bg-accent/90 text-accent-foreground">
+              <div className="flex items-center justify-between p-5 rounded-lg border border-border hover:bg-muted/30 transition-colors">
+                <div className="space-y-1">
+                  <p className="font-medium text-base">إشعارات القضايا الجديدة</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed">تلقي تنبيه عند إضافة قضية جديدة</p>
+                </div>
+                <Switch defaultChecked />
+              </div>
+              <div className="flex items-center justify-between p-5 rounded-lg border border-border hover:bg-muted/30 transition-colors">
+                <div className="space-y-1">
+                  <p className="font-medium text-base">إشعارات المستندات</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed">تنبيه عند رفع مستند جديد</p>
+                </div>
+                <Switch defaultChecked />
+              </div>
+              <div className="flex items-center justify-between p-5 rounded-lg border border-border hover:bg-muted/30 transition-colors">
+                <div className="space-y-1">
+                  <p className="font-medium text-base">إشعارات المهام</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed">تذكير بالمهام المعلقة والمواعيد النهائية</p>
+                </div>
+                <Switch defaultChecked />
+              </div>
+              <div className="flex items-center justify-between p-5 rounded-lg border border-border hover:bg-muted/30 transition-colors">
+                <div className="space-y-1">
+                  <p className="font-medium text-base">ملخص يومي</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed">إرسال ملخص يومي بالبريد الإلكتروني</p>
+                </div>
+                <Switch />
+              </div>
+              <Button className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-sm h-11 px-6 mt-2">
                 <Save className="ml-2 h-4 w-4" />
                 حفظ الإعدادات
               </Button>
@@ -194,7 +194,7 @@ export function SettingsContent() {
 
         {/* Branding Tab */}
         <TabsContent value="branding" className="space-y-6">
-          <Card className="border-border">
+          <Card className="border-border shadow-sm">
             <CardHeader>
               <CardTitle>الهوية البصرية للمستندات</CardTitle>
               <CardDescription>تخصيص شعار ورأس وتذييل المستندات</CardDescription>
@@ -230,7 +230,7 @@ export function SettingsContent() {
                   />
                 </div>
               </div>
-              <Button className="bg-accent hover:bg-accent/90 text-accent-foreground">
+              <Button className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-sm h-11 px-6">
                 <Save className="ml-2 h-4 w-4" />
                 حفظ الهوية البصرية
               </Button>

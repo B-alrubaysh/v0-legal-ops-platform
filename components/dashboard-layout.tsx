@@ -33,13 +33,12 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Top Bar */}
       <header className="sticky top-0 z-50 w-full border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80 border-border shadow-sm">
         <div className="flex h-16 items-center gap-4 px-6">
           <Button
             variant="ghost"
             size="icon"
-            className="lg:hidden"
+            className="lg:hidden hover:bg-accent"
             onClick={() => setSidebarOpen(!sidebarOpen)}
           >
             {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -50,20 +49,20 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
               <Scale className="w-5 h-5 text-primary-foreground" />
             </div>
             <div className="hidden sm:block">
-              <h1 className="text-lg font-bold text-foreground">منصة العمليات القانونية</h1>
+              <h1 className="text-lg font-bold text-foreground leading-none">منصة العمليات القانونية</h1>
             </div>
           </div>
 
-          <div className="mr-auto flex items-center gap-3">
-            <Button variant="ghost" size="icon" className="relative hover:bg-accent">
+          <div className="mr-auto flex items-center gap-4">
+            <Button variant="ghost" size="icon" className="relative hover:bg-accent transition-colors">
               <Bell className="h-5 w-5" />
-              <span className="absolute top-2 left-2 h-2 w-2 rounded-full bg-destructive ring-2 ring-card"></span>
+              <span className="absolute top-2 left-2 h-2 w-2 rounded-full bg-destructive ring-2 ring-card animate-pulse"></span>
             </Button>
             
-            <div className="flex items-center gap-3 pr-3 border-r border-border">
-              <Avatar className="h-9 w-9 ring-2 ring-border">
+            <div className="flex items-center gap-3 pr-4 border-r border-border">
+              <Avatar className="h-9 w-9 ring-2 ring-border hover:ring-primary transition-all cursor-pointer">
                 <AvatarImage src="/placeholder.svg?height=36&width=36" />
-                <AvatarFallback className="bg-primary text-primary-foreground font-semibold">أح</AvatarFallback>
+                <AvatarFallback className="bg-primary text-primary-foreground font-semibold text-sm">أح</AvatarFallback>
               </Avatar>
               <div className="hidden md:block text-right">
                 <p className="text-sm font-semibold leading-none">أحمد الشمري</p>
@@ -75,7 +74,6 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
       </header>
 
       <div className="flex">
-        {/* Sidebar */}
         <aside className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'} fixed lg:sticky top-16 right-0 z-40 h-[calc(100vh-4rem)] w-64 border-l border-border bg-sidebar transition-transform duration-300 ease-in-out overflow-y-auto`}>
           <nav className="space-y-1 p-4">
             {menuItems.map((item) => {
@@ -84,16 +82,16 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all ${
+                  className={`flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium transition-all duration-200 ${
                     active 
-                      ? 'bg-sidebar-accent text-sidebar-accent-foreground shadow-sm' 
-                      : 'text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground'
+                      ? 'bg-primary text-primary-foreground shadow-sm border-r-4 border-primary' 
+                      : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:translate-x-[-2px]'
                   }`}
                 >
-                  <item.icon className="h-5 w-5 flex-shrink-0" />
+                  <item.icon className={`h-5 w-5 flex-shrink-0`} />
                   <span className="flex-1">{item.label}</span>
                   {item.badge && (
-                    <Badge variant="secondary" className="text-xs px-2 py-0.5">
+                    <Badge variant={active ? "secondary" : "outline"} className="text-xs px-2 py-0.5 font-semibold">
                       {item.badge}
                     </Badge>
                   )}

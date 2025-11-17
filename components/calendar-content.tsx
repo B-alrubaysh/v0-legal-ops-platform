@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import {
   Dialog,
   DialogContent,
@@ -64,62 +63,56 @@ export function CalendarContent() {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Page Header */}
+    <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-foreground">التقويم والجلسات</h1>
-        <p className="text-muted-foreground mt-2">جدولة ومتابعة الجلسات والمواعيد</p>
+        <h1 className="text-3xl font-bold text-foreground mb-2">التقويم والجلسات</h1>
+        <p className="text-muted-foreground text-base leading-relaxed">جدولة ومتابعة الجلسات والمواعيد</p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
-        {/* Calendar */}
-        <Card className="lg:col-span-2 border-border">
+        <Card className="lg:col-span-2 border-border shadow-sm">
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle className="text-xl font-bold">
+              <CardTitle className="text-xl font-semibold">
                 {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
               </CardTitle>
               <div className="flex gap-2">
-                <Button variant="outline" size="icon" onClick={prevMonth}>
+                <Button variant="outline" size="icon" onClick={prevMonth} className="h-10 w-10 shadow-sm">
                   <ChevronRight className="h-4 w-4" />
                 </Button>
-                <Button variant="outline" size="icon" onClick={nextMonth}>
+                <Button variant="outline" size="icon" onClick={nextMonth} className="h-10 w-10 shadow-sm">
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
               </div>
             </div>
           </CardHeader>
           <CardContent>
-            {/* Day Names */}
-            <div className="grid grid-cols-7 gap-2 mb-2">
+            <div className="grid grid-cols-7 gap-2 mb-3">
               {dayNames.map((day) => (
-                <div key={day} className="text-center text-sm font-medium text-muted-foreground py-2">
+                <div key={day} className="text-center text-sm font-semibold text-muted-foreground py-2.5">
                   {day}
                 </div>
               ))}
             </div>
 
-            {/* Calendar Days */}
             <div className="grid grid-cols-7 gap-2">
-              {/* Empty cells for days before month starts */}
               {Array.from({ length: startingDayOfWeek }).map((_, index) => (
                 <div key={`empty-${index}`} className="aspect-square" />
               ))}
 
-              {/* Actual days */}
               {Array.from({ length: daysInMonth }).map((_, index) => {
                 const day = index + 1
                 const daySessions = getSessionsForDay(day)
-                const isToday = day === 17 // Mock today as 17th
+                const isToday = day === 17
 
                 return (
                   <div
                     key={day}
                     className={`aspect-square border rounded-lg p-2 ${
-                      isToday ? 'border-primary bg-primary/5' : 'border-border'
-                    } ${daySessions.length > 0 ? 'cursor-pointer hover:bg-muted' : ''}`}
+                      isToday ? 'border-primary bg-primary/5 shadow-sm' : 'border-border'
+                    } ${daySessions.length > 0 ? 'cursor-pointer hover:bg-muted/50 transition-colors' : ''}`}
                   >
-                    <div className={`text-sm font-medium mb-1 ${isToday ? 'text-primary' : 'text-foreground'}`}>
+                    <div className={`text-sm font-semibold mb-1 ${isToday ? 'text-primary' : 'text-foreground'}`}>
                       {day}
                     </div>
                     <div className="space-y-1">
@@ -127,13 +120,13 @@ export function CalendarContent() {
                         <div
                           key={session.id}
                           onClick={() => handleSessionClick(session)}
-                          className="text-xs bg-blue-100 text-blue-700 rounded px-1 py-0.5 truncate"
+                          className="text-xs bg-blue-100 text-blue-700 dark:bg-blue-950/30 dark:text-blue-400 rounded px-1.5 py-0.5 truncate font-medium"
                         >
                           {session.time}
                         </div>
                       ))}
                       {daySessions.length > 2 && (
-                        <div className="text-xs text-muted-foreground">
+                        <div className="text-xs text-muted-foreground font-medium">
                           +{daySessions.length - 2}
                         </div>
                       )}
@@ -145,17 +138,16 @@ export function CalendarContent() {
           </CardContent>
         </Card>
 
-        {/* Upcoming Sessions */}
-        <Card className="border-border">
-          <CardHeader>
-            <CardTitle className="text-xl font-bold">الجلسات القادمة</CardTitle>
+        <Card className="border-border shadow-sm">
+          <CardHeader className="pb-5">
+            <CardTitle className="text-xl font-semibold">الجلسات القادمة</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div className="space-y-3">
               {sessions.slice(0, 5).map((session) => (
                 <div
                   key={session.id}
-                  className="p-3 rounded-lg border border-border hover:bg-muted cursor-pointer transition-colors"
+                  className="p-4 rounded-lg border border-border hover:bg-muted/50 cursor-pointer transition-colors"
                   onClick={() => handleSessionClick(session)}
                 >
                   <div className="flex items-start gap-3">
@@ -163,9 +155,9 @@ export function CalendarContent() {
                       <CalendarIcon className="h-5 w-5 text-primary" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-medium text-sm mb-1">{session.type}</h4>
-                      <p className="text-xs text-muted-foreground truncate">{session.client}</p>
-                      <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
+                      <h4 className="font-semibold text-sm mb-1.5">{session.type}</h4>
+                      <p className="text-xs text-muted-foreground truncate mb-2.5">{session.client}</p>
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground font-medium">
                         <Clock className="h-3 w-3" />
                         <span>{session.date} - {session.time}</span>
                       </div>

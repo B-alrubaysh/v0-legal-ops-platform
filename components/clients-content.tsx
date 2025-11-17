@@ -78,9 +78,9 @@ export function ClientsContent() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-foreground mb-2">العملاء</h1>
-          <p className="text-muted-foreground text-base">إدارة قاعدة بيانات العملاء</p>
+          <p className="text-muted-foreground text-base leading-relaxed">إدارة قاعدة بيانات العملاء</p>
         </div>
-        <Button className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-sm">
+        <Button className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-sm hover:shadow-md transition-all h-11 px-5">
           <Plus className="ml-2 h-4 w-4" />
           إضافة عميل جديد
         </Button>
@@ -108,19 +108,19 @@ export function ClientsContent() {
             <Table>
               <TableHeader>
                 <TableRow className="hover:bg-transparent border-border">
-                  <TableHead className="text-right font-semibold h-14 px-6">اسم العميل</TableHead>
-                  <TableHead className="text-right font-semibold h-14">النوع</TableHead>
-                  <TableHead className="text-right font-semibold h-14">رقم الهوية / السجل التجاري</TableHead>
-                  <TableHead className="text-right font-semibold h-14">تاريخ الانتهاء</TableHead>
-                  <TableHead className="text-right font-semibold h-14">عدد القضايا</TableHead>
-                  <TableHead className="text-right font-semibold h-14">التواصل</TableHead>
-                  <TableHead className="text-right font-semibold h-14 px-6">الإجراءات</TableHead>
+                  <TableHead className="text-right font-semibold text-sm h-14 px-6">اسم العميل</TableHead>
+                  <TableHead className="text-right font-semibold text-sm h-14">النوع</TableHead>
+                  <TableHead className="text-right font-semibold text-sm h-14">رقم الهوية / السجل التجاري</TableHead>
+                  <TableHead className="text-right font-semibold text-sm h-14">تاريخ الانتهاء</TableHead>
+                  <TableHead className="text-right font-semibold text-sm h-14">عدد القضايا</TableHead>
+                  <TableHead className="text-right font-semibold text-sm h-14">التواصل</TableHead>
+                  <TableHead className="text-right font-semibold text-sm h-14 px-6">الإجراءات</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {clients.map((client, index) => (
                   <TableRow key={index} className={`${index % 2 === 0 ? 'bg-muted/30' : ''} hover:bg-muted/50 transition-colors border-border cursor-pointer`}>
-                    <TableCell className="font-semibold px-6 py-4">
+                    <TableCell className="font-semibold text-sm px-6 py-4">
                       <div className="flex items-center gap-3">
                         <Avatar className="h-9 w-9 flex-shrink-0">
                           <AvatarFallback className={client.type === 'شركة' ? 'bg-blue-100 text-blue-700 dark:bg-blue-950/30 dark:text-blue-400' : 'bg-green-100 text-green-700 dark:bg-green-950/30 dark:text-green-400'}>
@@ -130,23 +130,23 @@ export function ClientsContent() {
                         <span>{client.name}</span>
                       </div>
                     </TableCell>
-                    <TableCell className="py-4">
-                      <Badge variant={client.type === 'شركة' ? 'default' : 'secondary'} className="px-3 py-1">
+                    <TableCell className="text-sm py-4">
+                      <Badge variant={client.type === 'شركة' ? 'default' : 'secondary'} className="px-3 py-1 text-xs font-medium">
                         {client.type}
                       </Badge>
                     </TableCell>
-                    <TableCell className="py-4 font-medium">{client.idNumber}</TableCell>
-                    <TableCell className="py-4">{client.expiryDate}</TableCell>
+                    <TableCell className="py-4 font-medium text-sm">{client.idNumber}</TableCell>
+                    <TableCell className="py-4 text-sm">{client.expiryDate}</TableCell>
                     <TableCell className="py-4">
-                      <Badge variant="outline" className="px-3 py-1 font-semibold">{client.casesCount}</Badge>
+                      <Badge variant="outline" className="px-3 py-1 font-semibold text-xs">{client.casesCount}</Badge>
                     </TableCell>
                     <TableCell className="text-sm py-4">
                       <div className="font-medium">{client.phone}</div>
-                      <div className="text-muted-foreground mt-1">{client.email}</div>
+                      <div className="text-muted-foreground mt-1 text-xs">{client.email}</div>
                     </TableCell>
                     <TableCell className="px-6 py-4">
-                      <Button variant="ghost" size="sm" className="hover:bg-accent">
-                        <Eye className="h-4 w-4 ml-1" />
+                      <Button variant="ghost" size="sm" className="hover:bg-accent h-9 px-3 text-xs">
+                        <Eye className="h-3.5 w-3.5 ml-1.5" />
                         عرض الملف
                       </Button>
                     </TableCell>

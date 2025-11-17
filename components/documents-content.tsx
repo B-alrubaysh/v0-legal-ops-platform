@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Plus, Search, Upload, FileText, Download, Grid3x3, List, File } from 'lucide-react'
+import { Plus, Search, Upload, FileText, Download, Grid3x3, List } from 'lucide-react'
 
 export function DocumentsContent() {
   const [searchQuery, setSearchQuery] = useState('')
@@ -99,9 +99,9 @@ export function DocumentsContent() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-foreground mb-2">الوثائق</h1>
-          <p className="text-muted-foreground text-base">مكتبة الوثائق والمستندات</p>
+          <p className="text-muted-foreground text-base leading-relaxed">مكتبة الوثائق والمستندات</p>
         </div>
-        <Button className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-sm">
+        <Button className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-sm hover:shadow-md transition-all h-11 px-5">
           <Upload className="ml-2 h-4 w-4" />
           رفع وثيقة جديدة
         </Button>
@@ -175,21 +175,21 @@ export function DocumentsContent() {
                     <FileText className="h-7 w-7 text-muted-foreground" />
                   </div>
                   <div className="flex flex-col gap-2">
-                    <Badge className={getCategoryColor(doc.category)} variant="outline" className="px-2.5 py-1">
+                    <Badge className={`${getCategoryColor(doc.category)} px-2.5 py-1 text-xs font-medium`} variant="outline">
                       {doc.category}
                     </Badge>
-                    <Badge className={getFileTypeColor(doc.type)} variant="outline" className="px-2.5 py-1 text-xs">
+                    <Badge className={`${getFileTypeColor(doc.type)} px-2.5 py-1 text-xs font-medium`} variant="outline">
                       {doc.type}
                     </Badge>
                   </div>
                 </div>
-                <h3 className="font-semibold text-base mb-3 text-foreground line-clamp-2 leading-snug">{doc.name}</h3>
+                <h3 className="font-semibold text-base mb-4 text-foreground line-clamp-2 leading-snug">{doc.name}</h3>
                 <div className="space-y-2 text-sm text-muted-foreground mb-6">
                   <p className="font-medium">القضية: <span className="text-foreground">{doc.caseId}</span></p>
                   <p>التاريخ: {doc.uploadDate}</p>
                   <p>الحجم: {doc.size}</p>
                 </div>
-                <Button variant="outline" className="w-full hover:bg-accent hover:text-accent-foreground transition-colors">
+                <Button variant="outline" className="w-full hover:bg-accent hover:text-accent-foreground transition-colors h-10 text-sm">
                   <Download className="ml-2 h-4 w-4" />
                   فتح
                 </Button>
@@ -218,14 +218,14 @@ export function DocumentsContent() {
                       </div>
                     </div>
                     <div className="flex items-center gap-3 flex-shrink-0">
-                      <Badge className={getFileTypeColor(doc.type)} variant="outline" className="px-2.5 py-1">
+                      <Badge className={`${getFileTypeColor(doc.type)} px-2.5 py-1 text-xs font-medium`} variant="outline">
                         {doc.type}
                       </Badge>
-                      <Badge className={getCategoryColor(doc.category)} variant="outline" className="px-2.5 py-1">
+                      <Badge className={`${getCategoryColor(doc.category)} px-2.5 py-1 text-xs font-medium`} variant="outline">
                         {doc.category}
                       </Badge>
-                      <Button variant="ghost" size="sm" className="hover:bg-accent">
-                        <Download className="h-4 w-4 ml-1" />
+                      <Button variant="ghost" size="sm" className="hover:bg-accent h-9 px-3 text-xs">
+                        <Download className="h-3.5 w-3.5 ml-1.5" />
                         تحميل
                       </Button>
                     </div>
